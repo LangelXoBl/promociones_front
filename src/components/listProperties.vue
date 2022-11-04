@@ -21,13 +21,17 @@ export default {
     data() {
         return {
             properties: [],
-            selection: []
+            selection: [...this.unitys]
         }
     },
     props: {
         develop: {
             type: String,
             default: ""
+        },
+        unitys: {
+            type: Array,
+            default: []
         }
     },
     created() {

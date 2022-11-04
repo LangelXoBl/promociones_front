@@ -49,7 +49,25 @@
                             </v-menu>
                         </v-col>
 
-                        <ListProperties :develop="promo.desarrollo.code"></ListProperties>
+                        <template>
+                            <v-container>
+                                <v-card v-if="properties.length > 0">
+                                    <v-card-title primary-title>
+                                        Propiedades: {{ promo.desarrollo.code }}
+                                    </v-card-title>
+                                    <template>
+                                        <v-card-text>
+                                            Propiedades selecionadas:{{ promo.unidades.length }}
+                                        </v-card-text>
+
+                                        <v-treeview v-model="promo.unidades" selectable :items="properties">
+                                        </v-treeview>
+                                    </template>
+                                </v-card>
+                                <div v-else> Cargando propiedades...</div>
+                            </v-container>
+                        </template>
+
                         <v-col cols="12">
                             <v-textarea auto-grow label="Facilidades de pago" rows="2" row-height="20"
                                 v-model="promo.descuento.facilidades">
@@ -79,6 +97,7 @@ export default {
         return {
             form: false,
             menu: false,
+            properties: [],
             //date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString(),
         }
     }, components: {
@@ -90,6 +109,11 @@ export default {
             default: {}
         },
     }, created() {
+        fetch("http://localhost:3000/api/v2/realEstateDevelopment/order/floor", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json;charset=utf-8' },
+            body: JSON.stringify({ real_estate_development_code: this.promo.desarrollo.code })
+        }).then(res => res.json()).then(data => this.properties = data)
         this.promo.vigencia = this.promo.vigencia.split('T')[0]
     },
     computed: {

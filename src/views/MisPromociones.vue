@@ -33,6 +33,9 @@
         </tr>
       </tbody>
     </v-simple-table>
+    <v-card>
+      <selectProp></selectProp>
+    </v-card>
 
   </v-container>
 </template>
@@ -40,6 +43,7 @@
 <script>
 import formulario from '../components/formPromocione.vue'
 import crear from '@/components/crearPromo.vue'
+import selectProp from '@/components/selectProperties.vue'
 
 export default {
   name: 'Promociones',
@@ -51,7 +55,8 @@ export default {
   },
   components: {
     formulario,
-    crear
+    crear,
+    selectProp
   },
   created() {
     this.conect()

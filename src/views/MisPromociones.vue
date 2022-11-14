@@ -6,7 +6,7 @@
         <v-icon dark>mdi-plus</v-icon> nuevo
       </v-btn>
     </router-link>-->
-    <crear :develop="development"></crear>
+    <crear :develop="development" @actu="conect"></crear>
     <input type="text" name="" id="" v-model="development">
     <button @click="conect">buscar</button>
     <v-simple-table>
@@ -26,24 +26,21 @@
           <td>{{ descuento(promocion.descuento.cantidad, promocion.descuento.tipo) }}</td>
           <td>{{ formDate(promocion.vigencia) }}</td>
           <td>{{ formDate(promocion.createdAt) }}</td>
-          <formulario :promo="JSON.parse(JSON.stringify(promocion))" tipo="edit"></formulario>
+
+          <editar :data="JSON.parse(JSON.stringify(promocion))" @actu="conect"></editar>
           <v-btn class="mx-2" color="red" fab small dark v-on:click="delet(promocion._id)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </tr>
       </tbody>
     </v-simple-table>
-    <v-card>
-      <selectProp></selectProp>
-    </v-card>
-
   </v-container>
 </template>
 
 <script>
 import formulario from '../components/formPromocione.vue'
 import crear from '@/components/crearPromo.vue'
-import selectProp from '@/components/selectProperties.vue'
+import editar from '@/components/editPromotion.vue'
 
 export default {
   name: 'Promociones',
@@ -56,7 +53,7 @@ export default {
   components: {
     formulario,
     crear,
-    selectProp
+    editar
   },
   created() {
     this.conect()

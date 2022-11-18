@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import selectProp from '@/components/selectProperties.vue';
+//import selectProp from '@/components/selectProperties.vue';
 import formPromotion from '@/components/formPromocione.vue'
 
 export default {
@@ -38,30 +38,30 @@ export default {
             menu: false,
             properties: [],
             promotion: {
-                titulo: '',
-                unidades: [],
-                desarrollo: {
+                title: '',
+                properties: [],
+                real_estate_development: {
                     code: this.develop
                 },
-                descuento: {
-                    tipo: '',
-                    cantidad: '',
-                    facilidades: ''
+                discount: {
+                    type: '',
+                    quantity: '',
+                    payment_facilities: ''
                 },
-                vigencia: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+                validity: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
             },
             cero: {
-                titulo: '',
-                unidades: [],
-                desarrollo: {
+                title: '',
+                properties: [],
+                real_estate_development: {
                     code: this.develop
                 },
-                descuento: {
-                    tipo: '',
-                    cantidad: '',
-                    facilidades: ''
+                discount: {
+                    type: '',
+                    quantity: '',
+                    payment_facilities: ''
                 },
-                vigencia: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+                validity: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
             },
         }
     },
@@ -77,7 +77,7 @@ export default {
     methods: {
         async guardar(value) {
             console.log(value)
-            value.vigencia += 'T23:59:59.000Z'
+            value.validity += 'T23:59:59.000Z'
             const res = await fetch("http://localhost:3000/api/v2/myPromotions/new", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -86,7 +86,7 @@ export default {
             const data = await res.json()
             this.$emit('actu');
             console.log(this.promotion);
-            this.promotion.vigencia = this.promotion.vigencia.split("T")[0];
+            this.promotion.validity = this.promotion.validity.split("T")[0];
             this.form = false;
             this.promotion = this.cero
         },
@@ -95,7 +95,7 @@ export default {
         }
     },
     components: {
-        selectProp,
+        //selectProp,
         formPromotion
     }
 }

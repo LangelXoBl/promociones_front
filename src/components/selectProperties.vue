@@ -4,7 +4,7 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-autocomplete v-model="unids" :items="properties" filled chips color="blue-grey lighten-2"
+                        <v-autocomplete v-model="selected" :items="properties" filled chips color="blue-grey lighten-2"
                             label="Select" item-text="code" item-value="_id" multiple>
                             <template v-slot:selection="data">
                                 <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
@@ -33,10 +33,12 @@
 <script>
 export default {
     props: {
-        develop: {
+        //prop para hacer la peticion de las propiedades a la API
+        development_code: {
             type: String,
             default: 'meliora'
         },
+        //Son las propiedades que el formulario le manda
         propertieSelect: {
             type: Array,
             default: () => []
@@ -44,27 +46,27 @@ export default {
     },
     data() {
         return {
-            properties: [],
-            unids: JSON.parse(JSON.stringify(this.propertieSelect))
+            properties: [],//Es donde se guardan las propiedades que devuelve el API
+            selected: JSON.parse(JSON.stringify(this.propertieSelect))//Es donde se guardan las propiedades seleccionadas
         }
     },
     created() {
         fetch("http://localhost:3000/api/v2/realEstateDevelopment/propertieslist", {
             method: "POST",
             headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            body: JSON.stringify({ real_estate_development_code: this.develop })
-        }).then(res => res.json()).then(data => this.properties = data)
+            body: JSON.stringify({ real_estate_development_code: this.development_code })
+        }).then(res => res.json()).then(data => { this.properties = data.list; console.log(data.list) })
     },
     watch: {
-        unids() {
-            this.$emit('propSelec', this.unids)
-            console.log(this.unids)
+        selected() {
+            this.$emit('selected', this.selected)
+            console.log(this.selected)
         }
     },
     methods: {
         remove(item) {
-            const index = this.unids.indexOf(item._id)
-            if (index >= 0) this.unids.splice(index, 1)
+            const index = this.selected.indexOf(item._id)
+            if (index >= 0) this.selected.splice(index, 1)
         },
     },
 }

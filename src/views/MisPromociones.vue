@@ -1,14 +1,13 @@
 <template>
   <v-container>
-    <h2>Mis promociones</h2>
     <!--<router-link to="create">
       <v-btn class="mx-2" dark small color="indigo">
         <v-icon dark>mdi-plus</v-icon> nuevo
       </v-btn>
     </router-link>-->
-    <create :develop="development_code" @actu="conect"></create>
+    <create :develop="dev" :properties="properties" @actu="conect"></create>
     <!--Esto es unicamente para desarrollo-->
-    <input type="text" name="" id="" v-model="development_code">
+    <input type="text" name="" id="" v-model="dev">
     <button @click="conect">buscar</button>
     <v-simple-table>
       <thead>
@@ -17,18 +16,18 @@
           <th>Descuento</th>
           <th>Vigencia</th>
           <th>Creado</th>
-          <th>Opciones</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="promotion in promotions" :key="promotion._id">
-          <td>{{ promotion.title }}</td>
+          <td class="font-weight-bold">{{ promotion.title }}</td>
           <td>{{ discountFormat(promotion.discount.quantity, promotion.discount.type) }}</td>
           <td>{{ dateFormat(promotion.validity) }}</td>
           <td>{{ dateFormat(promotion.createdAt) }}</td>
-          <edit :data="promotion" @actu="conect"></edit>
-          <v-btn class="mx-2" color="red" fab small dark @click="delet(promotion._id)">
-            <v-icon>mdi-delete</v-icon>
+          <edit :data="promotion" :properties="properties" @actu="conect"></edit>
+          <v-btn title="Eliminar" icon class="mx-1" fab small @click="delet(promotion._id)">
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </tr>
       </tbody>
@@ -51,7 +50,9 @@ export default {
   },
   data() {
     return {
+      dev: this.development_code,
       promotions: [],//Array donde se guardaran las promociones
+      properties: []
     }
   },
   components: {
@@ -78,7 +79,7 @@ export default {
       this.conect();
     },
     async conect() {//#Este metodo se conectara el API para traer las promociones del desarrollo
-      const body = { real_estate_development_code: this.development_code };
+      const body = { real_estate_development_code: this.dev/*this.development_code*/ };
       const res = await fetch('http://localhost:3000/api/v2/myPromotions/show/all', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -86,10 +87,22 @@ export default {
       })
       this.promotions = await res.json()
       console.log(this.promotions);
+      //trae la lista de las propiedades
+      fetch("http://localhost:3000/api/v2/realEstateDevelopment/propertieslist", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify(body)
+      }).then(res => res.json()).then(data => { this.properties = data.list; console.log(data) })
     },
     dateFormat(date) {
       return new Date(date).toLocaleDateString()
-    }
+    },
+    /*valid(date) {
+      console.log('promo', date)
+      console.log('hoy', new Date())
+      if (new Date().toISOString() <= date) return ''
+      return 'background-color: #FFCDD2'
+    }*/
   }
 }
 </script>

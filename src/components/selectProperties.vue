@@ -2,29 +2,33 @@
     <v-card>
         <v-form>
             <v-container>
-                <v-row>
-                    <v-col cols="12">
-                        <v-autocomplete v-model="selected" :items="properties" filled chips color="blue-grey lighten-2"
-                            label="Select" item-text="code" item-value="_id" multiple>
-                            <template v-slot:selection="data">
-                                <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
-                                    @click:close="remove(data.item)">
-                                    {{ data.item.code }}
-                                    {{ data.item.floor.name }}
-                                </v-chip>
-                            </template>
-                            <template v-slot:item="data">
-                                <template>
-                                    <v-list-item-content>
+                <v-autocomplete v-model="selected" :items="properties" filled chips color="blue-grey lighten-2"
+                    label="Propiedades" item-text="code" item-value="_id" multiple>
+                    <template v-slot:selection="data">
+                        <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+                            @click:close="remove(data.item)">
+                            {{ data.item.code }}
+                            {{ data.item.floor }}
+                        </v-chip>
+                    </template>
+                    <template v-slot:item="data">
+                        <template>
+                            <v-list-item-content>
+                                <v-row>
+                                    <v-col>
                                         <v-list-item-title v-html="data.item.code"></v-list-item-title>
-                                        <v-list-item-subtitle v-html="data.item.floor.name"></v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </template>
-                            </template>
-                        </v-autocomplete>
-
-                    </v-col>
-                </v-row>
+                                        <v-list-item-subtitle v-html="data.item.floor"></v-list-item-subtitle>
+                                    </v-col>
+                                    <v-spacer></v-spacer>
+                                    <v-col>
+                                        <v-list-item-subtitle v-html="`Promos aplicadas:${data.item.promos}`">
+                                        </v-list-item-subtitle>
+                                    </v-col>
+                                </v-row>
+                            </v-list-item-content>
+                        </template>
+                    </template>
+                </v-autocomplete>
             </v-container>
         </v-form>
     </v-card>
@@ -47,7 +51,7 @@ export default {
     data() {
         return {
             properties: [],//Es donde se guardan las propiedades que devuelve el API
-            selected: JSON.parse(JSON.stringify(this.propertieSelect))//Es donde se guardan las propiedades seleccionadas
+            selected: this.propertieSelect//Es donde se guardan las propiedades seleccionadas
         }
     },
     created() {
@@ -59,6 +63,7 @@ export default {
     },
     watch: {
         selected() {
+            console.log('propertiesSelect', this.propertieSelect)
             this.$emit('selected', this.selected)
             console.log(this.selected)
         }

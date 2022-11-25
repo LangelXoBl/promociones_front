@@ -11,18 +11,8 @@
                 <v-card-title>
                     <span class="text-h5">Editar Promocion</span>
                 </v-card-title>
-
             </v-toolbar>
             <formPromotion :data="promotion" :properties="properties" @close="close()" @save="save"></formPromotion>
-            <!--<v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="form = false">
-                    Close
-                </v-btn>
-                <v-btn color="blue darken-1" text @click="guardar()">
-                    Save
-                </v-btn>
-            </v-card-actions>-->
         </v-card>
     </v-dialog>
 </template>
@@ -40,33 +30,28 @@ export default {
             default: () => []
         }
     },
+    components: {
+        formPromotion
+    },
     data() {
         return {
             form: false,
             promotion: this.data
         }
-    }, components: {
-        formPromotion
     },
     methods: {
         async save(value) {
             this.promotion = value;
-            //this.promotion.validity += 'T23:59:59.000Z'
-            console.log(this.promotion)
-            //console.log(this.promotion.vigencia)
             const res = await fetch('http://localhost:3000/api/v2/myPromotions/edit',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json;charset=utf-8' },
                     body: JSON.stringify(this.promotion)
                 })
-            //this.promotion.validity = this.promotion.validity.split("T")[0];//#corta la fecha y toma la primera parte
             const status = await res.json()
-            console.log(status)
+            //console.log(status)
             this.$emit('actu');
-
             this.form = false
-            //console.log(this.promotion.vigencia)
         },
         close() {
             this.form = false

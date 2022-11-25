@@ -1,13 +1,11 @@
 <template>
     <v-card>
         <v-form ref="form" v-model="valid">
-
-
             <v-card-text>
                 <v-container>
                     <v-row>
                         <v-col cols="12">
-                            <v-text-field label="Titulo" prepend-icon="mdi-text" required v-model="promotion.title"
+                            <v-text-field label="Título" prepend-icon="mdi-text" required v-model="promotion.title"
                                 :rules="Rules">
                             </v-text-field>
                         </v-col>
@@ -26,7 +24,7 @@
                                 :return-value.sync="promotion.validity" transition="scale-transition" offset-y
                                 min-width="auto">
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="promotion.validity" label=" Vigencia"
+                                    <v-text-field v-model="promotion.validity" label=" Vigencia*"
                                         prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on" :rules="Rules">
                                     </v-text-field>
                                 </template>
@@ -47,8 +45,10 @@
                         </v-col>
                         <v-col cols="12">
                             <v-autocomplete v-if="!all_development" v-model="promotion.properties" :items="properties"
-                                chips label="Selecionar propiedades" item-text="code" item-value="_id" multiple
-                                prepend-icon="mdi-city">
+                                chips label="Seleccionar propiedades" item-text="code" item-value="_id" multiple
+                                clearable prepend-icon="mdi-city"
+                                hint="En caso de no seleccionar ninguna propiedad la promoción se aplicará a todo el desarrollo."
+                                persistent-hint>
                                 <template v-slot:selection="data">
                                     <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
                                         @click:close="remove(data.item)">
@@ -67,9 +67,15 @@
                                                 </v-col>
                                                 <v-spacer></v-spacer>
                                                 <v-col v-if="data.item.promos != 0">
-                                                    <v-list-item-subtitle
-                                                        v-html="`Promos aplicadas:${data.item.promos}`">
-                                                    </v-list-item-subtitle>
+                                                    <!--<v-chip small text-color="white" color="#262D3C">
+                                                        {{ `Promos aplicadas: ${data.item.promos}` }}
+                                                    </v-chip>-->
+                                                    <v-chip text-color="white" color="grey darken-1">
+                                                        <v-avatar left class="blue-grey darken-4">
+                                                            {{ data.item.promos }}
+                                                        </v-avatar>
+                                                        Acumulados
+                                                    </v-chip>
                                                 </v-col>
                                             </v-row>
                                         </v-list-item-content>
@@ -100,7 +106,6 @@
 </template>
 
 <script>
-//import selectProperties from '@/components/selectProperties.vue'
 export default {
     props: {
         //Es el prop que recibe el objeto de la promocion
@@ -124,12 +129,9 @@ export default {
             ],
             valid: true
         }
-    }, /*components: {
-        selectProperties
-    },*/
+    },
     created() {
         this.dateFormat();
-        //this.listProperties();
     },
     methods: {
         dateFormat() {
@@ -141,13 +143,9 @@ export default {
             this.$emit('save', this.promotion);
         },
         close() {
-            //console.log('edit', this.promotion.properties)
             this.promotion = JSON.parse(JSON.stringify(this.origin))
-            this.all_development = this.data.properties.length <= 0 ? true : false,
-                //console.log('origin', this.origin.properties)
-                //console.log('form', this.promotion.real_estate_development.code)
-
-                this.$emit('close', this.origin)
+            this.all_development = this.data.properties.length <= 0 ? true : false
+            this.$emit('close', this.origin)
         },
         remove(item) {
             const index = this.promotion.properties.indexOf(item._id)
@@ -155,21 +153,8 @@ export default {
         },
         reset() {
             this.$refs.form.reset()
-            //this.all_development = true;
-            //this.promotion.validity = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
         }
-        /*listProperties() {
-            fetch("http://localhost:3000/api/v2/realEstateDevelopment/propertieslist", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json;charset=utf-8' },
-                body: JSON.stringify({ real_estate_development_code: this.code })
-            }).then(res => res.json()).then(data => { this.properties = data.list; console.log(data) })
-        }*/
     }, watch: {
-        /*promotion() {
-            this.$emit('promo', this.promotion)
-            console.log(this.promotion)
-        },*/
         all_development() {
             if (this.all_development) this.promotion.properties = []
         },

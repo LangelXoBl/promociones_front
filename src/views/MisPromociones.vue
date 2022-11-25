@@ -1,10 +1,5 @@
 <template>
   <v-container>
-    <!--<router-link to="create">
-      <v-btn class="mx-2" dark small color="indigo">
-        <v-icon dark>mdi-plus</v-icon> nuevo
-      </v-btn>
-    </router-link>-->
     <create :develop="dev" :properties="properties" @actu="conect"></create>
     <!--Esto es unicamente para desarrollo-->
     <input type="text" name="" id="" v-model="dev">
@@ -48,16 +43,16 @@ export default {
       default: "meliora"
     }
   },
+  components: {
+    create,
+    edit
+  },
   data() {
     return {
       dev: this.development_code,
       promotions: [],//Array donde se guardaran las promociones
       properties: []
     }
-  },
-  components: {
-    create,
-    edit
   },
   created() {
     this.conect()
@@ -75,7 +70,7 @@ export default {
         body: JSON.stringify(body)
       })
       const data = await res.json()
-      console.log(data);
+      //console.log(data);
       this.conect();
     },
     async conect() {//#Este metodo se conectara el API para traer las promociones del desarrollo
@@ -86,23 +81,17 @@ export default {
         body: JSON.stringify(body)
       })
       this.promotions = await res.json()
-      console.log(this.promotions);
+      //console.log(this.promotions);
       //trae la lista de las propiedades
       fetch("http://localhost:3000/api/v2/realEstateDevelopment/propertieslist", {
         method: "POST",
         headers: { 'Content-Type': 'application/json;charset=utf-8' },
         body: JSON.stringify(body)
-      }).then(res => res.json()).then(data => { this.properties = data.list; console.log(data) })
+      }).then(res => res.json()).then(data => { this.properties = data.list; /*console.log(data)*/ })
     },
     dateFormat(date) {
       return new Date(date).toLocaleDateString()
     },
-    /*valid(date) {
-      console.log('promo', date)
-      console.log('hoy', new Date())
-      if (new Date().toISOString() <= date) return ''
-      return 'background-color: #FFCDD2'
-    }*/
   }
 }
 </script>

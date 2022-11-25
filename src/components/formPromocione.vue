@@ -5,7 +5,7 @@
                 <v-container>
                     <v-row>
                         <v-col cols="12">
-                            <v-text-field label="Título" prepend-icon="mdi-text" required v-model="promotion.title"
+                            <v-text-field label="Título*" prepend-icon="mdi-text" required v-model="promotion.title"
                                 :rules="Rules">
                             </v-text-field>
                         </v-col>
@@ -67,15 +67,15 @@
                                                 </v-col>
                                                 <v-spacer></v-spacer>
                                                 <v-col v-if="data.item.promos != 0">
-                                                    <!--<v-chip small text-color="white" color="#262D3C">
+                                                    <v-chip small text-color="white" color="#262D3C">
                                                         {{ `Promos aplicadas: ${data.item.promos}` }}
-                                                    </v-chip>-->
-                                                    <v-chip text-color="white" color="grey darken-1">
+                                                    </v-chip>
+                                                    <!--<v-chip text-color="white" color="grey darken-1">
                                                         <v-avatar left class="blue-grey darken-4">
                                                             {{ data.item.promos }}
                                                         </v-avatar>
                                                         Acumulados
-                                                    </v-chip>
+                                                    </v-chip>-->
                                                 </v-col>
                                             </v-row>
                                         </v-list-item-content>
@@ -90,15 +90,15 @@
                         </v-col>
                     </v-row>
                 </v-container>
-                <small>*indicates required field</small>
+                <small>*Campos Requeridos</small>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="close()">
-                    Close
+                    Cerrar
                 </v-btn>
                 <v-btn color="blue darken-1" text @click="save()" :disabled="!valid">
-                    Save
+                    Guardar
                 </v-btn>
             </v-card-actions>
         </v-form>
@@ -127,7 +127,7 @@ export default {
             Rules: [
                 v => !!v || 'Campo requerido'
             ],
-            valid: true
+            valid: true//se usa para validar el formulario y desabilitar el boton de guardar
         }
     },
     created() {

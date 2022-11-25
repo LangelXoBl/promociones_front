@@ -1,8 +1,7 @@
 <template>
     <v-dialog v-model="form" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-            <v-btn class="mx-2" color="cyan lighten-5" title="Ver y editar" fab elevation="0" small v-bind="attrs"
-                v-on="on">
+            <v-btn color="cyan lighten-5" title="Ver y editar" fab elevation="0" small v-bind="attrs" v-on="on">
                 <v-icon color="cyan darken-4">mdi-eye</v-icon>
             </v-btn>
         </template>
@@ -50,7 +49,7 @@ export default {
                 })
             const status = await res.json()
             //console.log(status)
-            this.$emit('actu');
+            this.$emit('update');
             this.form = false
         },
         close() {

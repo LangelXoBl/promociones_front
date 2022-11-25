@@ -1,32 +1,30 @@
 <template>
   <v-container>
-    <create :develop="dev" :properties="properties" @actu="conect"></create>
     <!--Esto es unicamente para desarrollo-->
-    <input type="text" name="" id="" v-model="dev">
-    <button @click="conect">buscar</button>
-    <v-simple-table>
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Descuento</th>
-          <th>Vigencia</th>
-          <th>Creado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="promotion in promotions" :key="promotion._id">
-          <td class="font-weight-bold">{{ promotion.title }}</td>
-          <td>{{ discountFormat(promotion.discount.quantity, promotion.discount.type) }}</td>
-          <td>{{ dateFormat(promotion.validity) }}</td>
-          <td>{{ dateFormat(promotion.createdAt) }}</td>
-          <edit :data="promotion" :properties="properties" @actu="conect"></edit>
-          <v-btn title="Eliminar" icon class="mx-1" fab small @click="delet(promotion._id)">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </tr>
-      </tbody>
-    </v-simple-table>
+    <v-data-table :headers="headers" :items="promotions" class="elevation-1">
+      <template v-slot:top>
+        <create :develop="dev" :properties="properties" @update="conect"></create>
+      </template>
+      <template v-slot:item.discount.quantity="{ item }">
+        {{ discountFormat(item.discount.quantity, item.discount.type) }}
+      </template>
+      <!--<template v-slot:item.status="{ item }">
+        {{  }}
+      </template>-->
+      <template v-slot:item.validity="{ item }">
+        {{ dateFormat(item.validity) }}
+      </template>
+      <template v-slot:item.createdAt="{ item }">
+        {{ dateFormat(item.createdAt) }}
+      </template>
+      <v-spacer></v-spacer>
+      <template v-slot:item.accions="{ item }">
+        <edit :data="item" :properties="properties" @update="conect"></edit>
+        <v-btn title="Eliminar" icon fab @click="delet(item._id)">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 
@@ -51,7 +49,15 @@ export default {
     return {
       dev: this.development_code,
       promotions: [],//Array donde se guardaran las promociones
-      properties: []
+      properties: [],//se guarda la lista de las propiedades que usa el formulario
+      headers: [
+        { text: 'Título', align: 'start', sortable: false, value: 'title' },
+        //{ text: 'Estatus', value: 'status' },
+        { text: 'Descuento', value: 'discount.quantity' },
+        { text: 'Vigencia', value: 'validity' },
+        { text: 'Creado', value: 'createdAt' },
+        { text: 'Acciones', value: 'accions', sortable: false, },
+      ],
     }
   },
   created() {
@@ -90,7 +96,8 @@ export default {
       }).then(res => res.json()).then(data => { this.properties = data.list; /*console.log(data)*/ })
     },
     dateFormat(date) {
-      return new Date(date).toLocaleDateString()
+      date = date.split('T')[0];
+      return date
     },
   }
 }

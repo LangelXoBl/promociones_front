@@ -2,7 +2,8 @@
     <v-container>
         <v-dialog v-model="form" persistent max-width="600px">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn class="mx-2" dark outlined color="blue" v-bind="attrs" v-on="on">
+                <v-btn dark style="background-color: #262d3c;" v-bind="attrs" v-on="on"
+                    :disabled="properties.length == 0">
                     <v-icon>mdi-plus</v-icon> añadir promocion
                 </v-btn>
             </template>
@@ -65,7 +66,7 @@ export default {
             })
             const data = await res.json()
             //console.log(data)
-            this.$emit('actu');
+            this.$emit('update');
             this.form = false;
             this.$refs.form.reset()
         },

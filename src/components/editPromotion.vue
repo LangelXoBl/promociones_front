@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="form" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-            <v-btn color="cyan lighten-5" title="Ver y editar" fab elevation="0" small v-bind="attrs" v-on="on">
+            <v-btn color="cyan lighten-5" :title="data.title" fab elevation="0" small v-bind="attrs" v-on="on">
                 <v-icon color="cyan darken-4">mdi-eye</v-icon>
             </v-btn>
         </template>

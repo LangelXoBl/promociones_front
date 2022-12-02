@@ -158,6 +158,11 @@ export default {
         all_development() {
             if (this.all_development) this.promotion.properties = []
         },
+        data() {
+            //Ajuste para modificar el formulario cada vez que se actualiza la tabla
+            this.promotion = JSON.parse(JSON.stringify(this.data))
+            this.origin = JSON.parse(JSON.stringify(this.data))
+        }
     },
 }
 </script>

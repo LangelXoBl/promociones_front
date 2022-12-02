@@ -8,10 +8,19 @@
       <template v-slot:item.discount.quantity="{ item }">
         {{ discountFormat(item.discount.quantity, item.discount.type) }}
       </template>
-      <!--<template v-slot:item.status="{ item }">
-        {{  }}
-      </template>-->
+      <template v-slot:item.status="{ item }">
+        <v-icon :color="validity(item.validity) ? 'green' : 'red'">
+          {{ validity(item.validity) ? 'mdi-checkbox-marked-circle' : 'mdi-alert-circle ' }}
+        </v-icon>
+        {{ validity(item.validity) ? 'Vigente' : 'Finalizado' }}
+      </template>
+      <template v-slot:item.aplied="{ item }">
+        {{ apliedTo(item.properties) }}
+      </template>
       <template v-slot:item.validity="{ item }">
+        <!--<v-icon :color="validity(item.validity) ? 'green' : 'red'">
+          {{ validity(item.validity) ? 'mdi-checkbox-marked-circle' : 'mdi-cancel' }}
+        </v-icon>-->
         {{ dateFormat(item.validity) }}
       </template>
       <template v-slot:item.createdAt="{ item }">
@@ -31,6 +40,9 @@
 <script>
 import create from '@/components/crearPromo.vue'
 import edit from '@/components/editPromotion.vue'
+import moment from 'moment'
+
+
 
 export default {
   name: 'Promociones',
@@ -52,7 +64,8 @@ export default {
       properties: [],//se guarda la lista de las propiedades que usa el formulario
       headers: [
         { text: 'Título', align: 'start', sortable: false, value: 'title' },
-        //{ text: 'Estatus', value: 'status' },
+        { text: 'Estatus', value: 'status', sortable: false, },
+        { text: 'Aplicado a', value: 'aplied', sortable: false, },
         { text: 'Descuento', value: 'discount.quantity' },
         { text: 'Vigencia', value: 'validity' },
         { text: 'Creado', value: 'createdAt' },
@@ -96,9 +109,19 @@ export default {
       }).then(res => res.json()).then(data => { this.properties = data.list; /*console.log(data)*/ })
     },
     dateFormat(date) {
-      date = date.split('T')[0];
-      return date
+      //console.log(date)
+      let fecha = new Date(date)
+      fecha.setMinutes(fecha.getMinutes() + fecha.getTimezoneOffset())//Hora ajustada para mostrar al usuario
+      return moment(fecha).locale('es-mx').format('DD-MMM-YYYY h:mm a')
     },
+    validity(date) {//valida que la promocion no haya vencido
+      if (new Date(date) > new Date()) return true
+      return false
+    },
+    apliedTo(properties) {
+      if (properties.length != 0) return `${properties.length} propiedades`
+      return 'Todo el desarrollo'
+    }
   }
 }
 </script>

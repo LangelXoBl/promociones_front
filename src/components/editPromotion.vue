@@ -11,7 +11,7 @@
                     <span class="text-h5">Editar Promocion</span>
                 </v-card-title>
             </v-toolbar>
-            <formPromotion :data="promotion" :properties="properties" @close="close()" @save="save"></formPromotion>
+            <formPromotion :data="data" :properties="properties" @close="close()" @save="save"></formPromotion>
         </v-card>
     </v-dialog>
 </template>
